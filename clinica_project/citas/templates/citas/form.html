@@ -1,0 +1,16 @@
+<!-- citas/templates/citas/form.html -->
+{% extends 'citas/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        {{ form.as_p }}
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="javascript:history.back()" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

@@ -23,9 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 import environ
 import os
 
-# Inicializar variables de entorno
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 env = environ.Env()
-environ.Env.read_env()
+# Leer el archivo .env ubicado junto a manage.py
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Cargar la clave secreta desde variable de entorno
 SECRET_KEY = env('SECRET_KEY')
@@ -34,7 +36,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['ClinicaDB.onrender.com']
+ALLOWED_HOSTS = ['clinicadb.onrender.com', 'localhost', '127.0.0.1']
 
 
 
@@ -83,7 +85,20 @@ WSGI_APPLICATION = 'clinica_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
+import os
+import environ
+import dj_database_url
+
+env = environ.Env()
+environ.Env.read_env()
+
+if 'RENDER' in os.environ:
+    # Configuración para Render (usa PostgreSQL)
+    DATABASES = {
+        'default': dj_database_url.config(default=env('DATABASE_URL'))
+    }
+else:
+    DATABASES = {
     'default': {
         'ENGINE': 'mssql',
         'NAME': 'ClinicaDB',
